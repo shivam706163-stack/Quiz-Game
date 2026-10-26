@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+  
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #001e4d;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    padding: 45px 35px;
+}
+
+.wlcm h1 {
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #c5d4e8;
+}
+
+.wlcm h1 span {
+    display: inline-block;
+    font-size: 68px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: white;
+    margin-left: 0;
+}
+
+.wlcm p {
+    font-size: 16px;
+    color: #a9bbd4;
+    margin-top: 12px;
+    margin-left: 0;
+    padding: 0;
+}
+
+.btnn {
+    margin-top: 28px;
+    padding: 13px 30px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #001e4d;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.btnn:hover {
+    background-color: #bde7ff;
+    transform: translateY(-3px);
+}
+
+
+    .app{
+        background: #fff;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 10px;
+        padding: 25px;
+        display: none;
+    }
+
+    .app h1{
+        font-size: 32px;
+        color: #001e4d;
+        font-weight: 600;
+        border-bottom: 1px solid #333;
+        padding-bottom: 25px;
+    }
+
+    .quiz{
+        padding: 20px 0;
+    }
+
+    .quiz h2{
+        font-size: 18px;
+        color: #001e4d;
+        font-weight: 400;
+    }
+
+    .btn{
+    background-color: #fff;
+    color: #222;
+    font-weight: 500;
+    width: 100%;
+    border: 1px solid #222;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: left;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn:hover{
+    background-color: #222;
+    color: white;
+}
+
+
+.btns{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-top: 2px;
+}
+.btns button{
+     height: 44px;
+    width: 118px;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 19px;
+    background-color: #191f80;
+    outline: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: none;
+ }
+    .submit button{
+        height: 44px;
+        width: 150px;
+        font-size: 22px;
+        padding: 10px 15px;
+        margin-top: 11px;
+        margin-left: 177px;
+        background-color: #191f80;
+        border-radius: 20px;
+        outline: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <div class="wlcm">
+    <h1>Welcome to <br> <span>QuizIfy</span></h1>
+    <p>Test Your Knowledge.Challenge Yourself</p>
+        </div>
+        <button class="btnn">Start Quiz</button>
+    </div>
+
+        <div class="app">
+        <h1>Simple Quiz</h1>
+        <div class="quiz">
+            <h2 id="question"></h2>
+            <div id="answer-button">
+                <button class="btn">Answer 1</button>
+                <button class="btn">Answer 1</button>
+                <button class="btn">Answer 1</button>
+                <button class="btn">Answer 1</button>
+            </div>
+            <div class="btns">
+                <button id="pre">Prev</button>
+                <button id="nxt">Next</button>
+            </div>
+            <div class="submit">
+                <button id="smt">Submit</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+
+        
+const questionbox = document.querySelector('#question');
+const choices = document.querySelectorAll('#answer-button .btn');
+const nextquestion = document.querySelector('.btns #nxt');
+const prevquestion = document.querySelector('.btns #pre');
+const startQuiz = document.querySelector('.btnn')
+const welcome = document.querySelector('.container');
+const quizshow = document.querySelector('.app');
+const submit = document.querySelector('#smt')
+
+
+startQuiz.addEventListener('click',function(){
+    welcome.style.display ="none";
+    quizshow.style.display ="block"
+
+})
+
+
+const quiz = [
+    {
+        question: "Which of the following is not a CSS box model property?",
+        choices: ["margin", "padding", "border-box", "border-collapse"],
+        answer: "border-collapse"
+    },
+    {
+        question: "Which of the following is not a valid way to declare a function in JavaScript?",
+        choices: [
+            "function myFunction() {}",
+            "let myFunction = function(){}",
+            "myFunction: function(){}",
+            "my () => {}"
+        ],
+        answer: "myFunction: function(){}"
+    },
+    {
+        question: "Which of the following is not a JavaScript data type?",
+        choices: ["string", "boolean", "array", "float"],
+        answer: "float"
+    }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let incorrect = 0;
+
+function showQuestion() {
+    const questionDetail = quiz[currentQuestionIndex];
+    questionbox.textContent = questionDetail.question;
+
+    for(let i = 0; i < choices.length; i++){
+    choices[i].disabled = false
+    choices[i].style.backgroundColor = ""
+}
+
+if(currentQuestionIndex === 0){
+    prevquestion.style.display = "none"
+}else if(currentQuestionIndex === 2){
+    prevquestion.style.display ="none"
+}
+else {
+    prevquestion.style.display = "block"
+}
+if(currentQuestionIndex === quiz.length -1){
+    nextquestion.style.display = "none"
+    submit.style.display = "block"
+}else{
+    nextquestion.style.display = "block"
+    submit.style.display = "none"
+
+}
+    for (let i = 0; i < choices.length; i++) {
+        choices[i].textContent = questionDetail.choices[i];
+    }
+}
+
+for (let i = 0; i < choices.length; i++) {
+    choices[i].addEventListener('click', function() {
+        if (choices[i].textContent === quiz[currentQuestionIndex].answer) {
+            choices[i].style.backgroundColor = "green";
+            score++;
+        } else {
+            choices[i].style.backgroundColor = "red";
+             incorrect++;
+        }
+
+         for(let j = 0; j < choices.length; j++){
+            choices[j].disabled = true
+        }
+    });
+}
+
+nextquestion.addEventListener('click', function() {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < quiz.length) {
+        showQuestion();
+     }
+});
+prevquestion.addEventListener('click',function(){
+
+    if(currentQuestionIndex > 0){
+    currentQuestionIndex--;
+    showQuestion()
+    }
+    
+})
+
+submit.addEventListener('click', function() {
+
+    questionbox.textContent = "Quiz Completed!";
+
+    document.querySelector('#answer-button').style.display = "none";
+    document.querySelector('.btns').style.display = "none";
+    submit.style.display = "none";
+
+    document.querySelector('.quiz').innerHTML += `
+        <h2>Correct Answers: ${score}</h2>
+        <h2>Incorrect Answers: ${incorrect}</h2>
+        <h2>Total Questions: ${quiz.length}</h2>
+    `;
+});
+
+showQuestion();
+
+    </script>
+</body>
+</html>l
